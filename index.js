@@ -1,4 +1,3 @@
-// Import the necessary modules.
 const cheerio = require('cheerio')
 const debug = require('debug')
 const got = require('got')
@@ -59,7 +58,7 @@ module.exports = class EztvApi {
    * @param {!Object} config={} - The configuration object for the module.
    * @param {!string} baseUrl=https://eztv.ag/ - The base url of eztv.
    */
-  constructor({baseUrl = 'https://eztv.ag/'} = {}) {
+  constructor({ baseUrl = 'https://eztv.ag/' } = {}) {
     /**
      * The base url of eztv.
      * @type {string}
@@ -294,7 +293,7 @@ module.exports = class EztvApi {
       'young-and-hungry': 'young-hungry',
       'young-herriot': 'young-james-herriot',
       'youre-the-worst': 'you-re-the-worst',
-      'zero-hour-us': 'zero-hour-2013'
+      'zero-hour-us': 'zero-hour-2013',
     }
     /**
      * Maps the EZTV imdb codes to trakt.tv imdb codes.
@@ -374,7 +373,7 @@ module.exports = class EztvApi {
       tt5133970: 'building-cars-live',
       tt5176246: 'tiny-house-world',
       tt5397520: 'dark-net',
-      tt5489746: 'evil-lives-here'
+      tt5489746: 'evil-lives-here',
     }
   }
 
@@ -389,7 +388,7 @@ module.exports = class EztvApi {
   _get(endpoint, query = {}, raw = false) {
     const uri = `${this._baseUrl}${endpoint}`
     const opts = {
-      query
+      query,
     }
 
     this._debug(`Making request to: '${uri}?${stringify(query)}'`)
@@ -424,7 +423,7 @@ module.exports = class EztvApi {
     }
 
     const table = 'tr.forum_header_border[name="hover"]'
-    $(table).each(function () {
+    $(table).each(function() {
       const entry = $(this)
       const magnet = entry.children('td').eq(2)
         .children('a.magnet')
@@ -447,10 +446,12 @@ module.exports = class EztvApi {
         season = parseInt(title.match(seasonBased)[1], 10)
         episode = parseInt(title.match(seasonBased)[2], 10)
         data.dateBased = false
+
       } else if (title.match(dateBased)) {
         season = title.match(dateBased)[1]
         episode = title.match(dateBased)[2].replace(/\s/g, '-')
         data.dateBased = true
+
       } else {
         season = 0
         episode = 0
@@ -473,9 +474,15 @@ module.exports = class EztvApi {
           ? title.match(/(\d{3,4})p/)[0]
           : '480p'
 
+        const seeds = parseInt(
+          entry.children('td').last()
+            .text(),
+          10
+        )
+
         const torrent = {
           url: magnet,
-          seeds: 0,
+          seeds: isNaN(seeds) ? 0 : seeds,
           peers: 0,
           provider: 'EZTV'
         }
@@ -500,7 +507,7 @@ module.exports = class EztvApi {
     return this._get('showlist/').then($ => {
       const regex = /\/shows\/(.*)\/(.*)\//
 
-      return $('.thread_link').map(function () {
+      return $('.thread_link').map(function() {
         const entry = $(this)
         const href = entry.attr('href')
 
@@ -547,7 +554,7 @@ module.exports = class EztvApi {
    * @returns {Promise<ApiResponse, Error>} - The response object of an API
    * call.
    */
-  getTorrents({page = 1, limit = 30, imdb} = {}) {
+  getTorrents({ page = 1, limit = 30, imdb } = {}) {
     let imdbId
     if (typeof imdb === 'string' && imdb.startsWith('tt')) {
       imdbId = imdb.substring(2, imdb.length)
