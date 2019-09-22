@@ -74,7 +74,7 @@ module.exports = class EztvApi {
      * Maps the EZTV slugs to trakt.tv slugs.
      * @type {Object}
      */
-    EztvApi._eztvMap = {
+    EztvApi._slugMap = {
       '10-oclock-live': '10-o-clock-live',
       '24-hours-in-aande': '24-hours-in-a-e',
       '24ch-la-serie': '24ch',
@@ -477,24 +477,53 @@ module.exports = class EztvApi {
         const seeds = parseInt(
           entry.children('td').last()
             .text(),
-          10
+          10,
         )
+
+        const sizeText = entry.children('td').eq(3)
+          .text().toUpperCase()
+
+        let size = parseFloat(
+          sizeText
+            .replace('GB')
+            .replace('MB')
+            .trim(),
+        )
+
+        if (sizeText.indexOf('MB') > -1 || sizeText.indexOf('GB') > -1) {
+          size = size * 1024 * 1024
+        }
+
+        if (sizeText.indexOf('GB') > -1) {
+          size = size * 1024
+        }
 
         const torrent = {
           url: magnet,
           seeds: isNaN(seeds) ? 0 : seeds,
           peers: 0,
-          provider: 'EZTV'
+          provider: 'EZTV',
+          size
         }
 
-        if (
-          !data.episodes[season][episode][quality] ||
-          title.toLowerCase().indexOf('repack') > -1
-        ) {
+        if (!data.episodes[season][episode][quality] || title.toLowerCase().indexOf('repack') > -1) {
           data.episodes[season][episode][quality] = torrent
         }
       }
     })
+
+    return data
+  }
+
+  /**
+   * Improve the format of the torrents
+   * @param data
+   * @return {*}
+   * @private
+   */
+  _formatTorrentData(data) {
+    data.imdb_id = `tt${data.imdb_id in EztvApi._imdbMap ? EztvApi._imdbMap[data.imdb_id] : data.imdb_id}`
+    data.name = data.filename
 
     return data
   }
@@ -515,12 +544,12 @@ module.exports = class EztvApi {
         const id = parseInt(href.match(regex)[1], 10)
 
         let slug = href.match(regex)[2]
-        slug = slug in EztvApi._eztvMap ? EztvApi._eztvMap[slug] : slug
+        slug = slug in EztvApi._slugMap ? EztvApi._slugMap[slug] : slug
 
         return {
           show,
           id,
-          slug
+          slug,
         }
       }).get()
     })
@@ -565,8 +594,13 @@ module.exports = class EztvApi {
     return this._get('api/get-torrents', {
       page,
       limit,
-      imdb_id: imdbId
+      imdb_id: imdbId,
     }, true)
+      .then(response => ({
+        ...response,
+        total_pages: parseInt(response.torrents_count / response.limit, 10),
+        torrents: response.torrents.map(this._formatTorrentData),
+      }))
   }
 
 }

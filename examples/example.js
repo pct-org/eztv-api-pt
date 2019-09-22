@@ -19,9 +19,8 @@ const eztv = new EztvApi()
 //   .catch(err => console.error(err))
 
 // Use the API of EZTV.
-eztv.getTorrents({
-  page: 1,
-  limit: 10, // 10 - 100
-  imdb: 5016504 // tt5016503
-}).then(res => console.log(res))
+eztv.getShowData({
+  id: 1047,
+  slug: 'power-2014'
+}).then(res => console.log(JSON.stringify(res)))
   .catch(err => console.error(err))
