@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const debug = require('debug')
 const got = require('got')
+const bytes = require('bytes')
 const { stringify } = require('querystring')
 
 const { name } = require('./package.json')
@@ -483,27 +484,12 @@ module.exports = class EztvApi {
         const sizeText = entry.children('td').eq(3)
           .text().toUpperCase()
 
-        let size = parseFloat(
-          sizeText
-            .replace('GB')
-            .replace('MB')
-            .trim(),
-        )
-
-        if (sizeText.indexOf('MB') > -1 || sizeText.indexOf('GB') > -1) {
-          size = size * 1024 * 1024
-        }
-
-        if (sizeText.indexOf('GB') > -1) {
-          size = size * 1024
-        }
-
         const torrent = {
           url: magnet,
           seeds: isNaN(seeds) ? 0 : seeds,
           peers: 0,
           provider: 'EZTV',
-          size
+          size: bytes(sizeText.trim())
         }
 
         if (!data.episodes[season][episode][quality] || title.toLowerCase().indexOf('repack') > -1) {
