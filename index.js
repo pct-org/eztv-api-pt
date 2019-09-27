@@ -468,7 +468,7 @@ module.exports = class EztvApi {
         }
 
         if (!data.episodes[season][episode]) {
-          data.episodes[season][episode] = {}
+          data.episodes[season][episode] = []
         }
 
         const quality = title.match(/(\d{3,4})p/)
@@ -484,17 +484,14 @@ module.exports = class EztvApi {
         const sizeText = entry.children('td').eq(3)
           .text().toUpperCase()
 
-        const torrent = {
+        data.episodes[season][episode].push({
           url: magnet,
           seeds: isNaN(seeds) ? 0 : seeds,
           peers: 0,
           provider: 'EZTV',
-          size: bytes(sizeText.trim())
-        }
-
-        if (!data.episodes[season][episode][quality] || title.toLowerCase().indexOf('repack') > -1) {
-          data.episodes[season][episode][quality] = torrent
-        }
+          size: bytes(sizeText.trim()),
+          quality,
+        })
       }
     })
 
