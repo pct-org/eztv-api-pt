@@ -103,7 +103,6 @@ module.exports = class EztvApi {
       'breathless-uk': 'breathless',
       'britains-got-more-talent': 'britain-s-got-more-talent',
       'britains-got-talent': 'britain-s-got-talent',
-      'brooklyn-nine-nine': 'brooklyn-ninenine',
       'brooklyn-ninenine': 'brooklyn-nine-nine',
       'cant-pay-well-take-it-away': 'can-t-pay-well-take-it-away',
       'carol-kleins-plant-odysseys': 'carol-klein-s-plant-odysseys',
