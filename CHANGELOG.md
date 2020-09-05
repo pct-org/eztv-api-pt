@@ -1,4 +1,13 @@
-## 1.3.4 (2020-04-22)
+## [1.3.5](https://github.com/pct-org/eztv-api-pt/compare/v1.3.4...v1.3.5) (2020-09-05)
+
+
+### Bug Fixes
+
+* Added isNaN check to size ([98e55d1](https://github.com/pct-org/eztv-api-pt/commit/98e55d1dcbc85a4145edfc6b1ae628abd2637c1a))
+
+
+
+## [1.3.4](https://github.com/pct-org/eztv-api-pt/compare/14168626a301d55a5420925f8f2c0bf5ed1b45a8...v1.3.4) (2020-04-22)
 
 
 ### Bug Fixes
