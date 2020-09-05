@@ -483,12 +483,14 @@ module.exports = class EztvApi {
         const sizeText = entry.children('td').eq(3)
           .text().toUpperCase()
 
+        const size = bytes(sizeText.trim())
+
         data.episodes[season][episode].push({
           url: magnet,
           seeds: isNaN(seeds) ? 0 : seeds,
           peers: 0,
           provider: 'EZTV',
-          size: bytes(sizeText.trim()),
+          size: isNaN(size) ? 0 : size,
           quality,
         })
       }
