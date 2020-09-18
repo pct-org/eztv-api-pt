@@ -1,3 +1,12 @@
+## [1.3.6](https://github.com/pct-org/eztv-api-pt/compare/v1.3.5...v1.3.6) (2020-09-18)
+
+
+### Bug Fixes
+
+* Fix for season based items being added to date based items ([2d2c4fe](https://github.com/pct-org/eztv-api-pt/commit/2d2c4feb166b6dae38de01d972ea16d432fd99d1))
+
+
+
 ## [1.3.5](https://github.com/pct-org/eztv-api-pt/compare/v1.3.4...v1.3.5) (2020-09-05)
 
 
