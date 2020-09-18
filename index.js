@@ -448,15 +448,20 @@ module.exports = class EztvApi {
         data.dateBased = false
 
       } else if (title.match(dateBased)) {
+        // If a item becomes data based check if the name of the show is in the
+        // item this prevents wrongly mapped items to be added
+        if (!data.dateBased && !title.toLowerCase().includes(data.show.toLowerCase())) {
+          return
+        }
+
         season = title.match(dateBased)[1]
         episode = title.match(dateBased)[2].replace(/\s/g, '-')
         data.dateBased = true
-
       } else {
         season = 0
         episode = 0
       }
-``
+
       if (season && episode) {
         if (!data.episodes) {
           data.episodes = {}
